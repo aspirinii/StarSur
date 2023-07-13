@@ -1,0 +1,140 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Weapon : MonoBehaviour
+{
+    // bullet manager claas 
+
+    public int id;
+    public int prefabId;
+    public float damage;
+    public int count;
+    public float speed;
+    float timer; // weapon 1 fire timer 
+    Player player;
+
+    private void Awake()
+    {
+        player = GameManager.instance.player;
+    }
+
+
+    void Update()
+    {
+        if(!GameManager.instance.isLive)
+            return;
+        switch (id) {
+            case 0 :
+                // transform.Rotate(0,0,speed * Time.deltaTime);
+                transform.Rotate(Vector3.back * speed * Time.deltaTime); // 한프레임이 소비하는시간 DeltaTime
+                break;
+
+            case 1 :
+                timer += Time.deltaTime;
+                if(timer > speed){
+                    timer = 0;
+                    Fire();
+                }
+                break;
+            default:
+                break;
+        }
+
+        //test code
+        // if(Input.GetButtonDown("Jump")){
+        // //     LevelUp(10,1);
+        // }
+    }
+
+    public void LevelUp(float damage, int count)
+    {
+        this.damage += damage;
+        this.count = count;
+
+        if(id == 0)
+            Batch();
+
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver); // player에 있는 ApplyGear 함수를 호출
+    }
+
+    public void Init(ItemData data)
+    {
+        // Basic Set
+        name = "Weapon " + data.itemId;
+        transform.parent = player.transform;
+        transform.localPosition = Vector3.zero;
+
+        // Property Set
+        id = data.itemId;
+        damage = data.baseDamage;
+        count = data.baseCount + CharacterStatus.Count;
+
+        for (int index = 0; index < GameManager.instance.pool.prefabs.Length; index++) // 생성
+        {
+            if (data.projectile == GameManager.instance.pool.prefabs[index])
+            {
+                prefabId = index;
+                break;
+            }
+        }
+        switch (id) {
+            case 0 :
+                speed = 150 * CharacterStatus.CircleSpeed;
+                Batch();
+                break;
+            case 1 : 
+                speed = 1f * CharacterStatus.AttackSpeed;
+                break;
+            default:
+                break;
+        }
+        //hand set 
+        Hand hand = player.hands[(int)data.itemType];
+        hand.spriteRenderer.sprite = data.handSprite;
+        hand.gameObject.SetActive(true);
+
+        //Broadcast 나중에 뭔지 더 확인하기  
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver); // player에 있는 ApplyGear 함수를 호출
+    }
+
+    void Batch()
+    {
+        for (int index=0; index < count; index++){
+            Transform bullet;
+
+            if(index < transform.childCount){
+                bullet = transform.GetChild(index); // 자식에 돌고있는 위치(인덱스)를 가져옴
+            }
+            else{ // 불렛을 추가하는 코드
+                bullet = GameManager.instance.pool.Get(prefabId).transform;
+                bullet.parent = transform;
+            }
+
+            bullet.parent = transform;
+            bullet.localPosition = new Vector3(0,0,0);
+            bullet.localRotation = Quaternion.identity;
+            Vector3 rotVec = Vector3.forward * (360f / count) * index;
+            bullet.Rotate(rotVec);
+            bullet.Translate(bullet.up * 1.5f, Space.World);
+            bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero); // -100 is Infinity Per.(관통)
+        }
+    }
+
+    void Fire()
+    {
+        if(!player.scanner.nearestTarget)
+            return;
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        // bullet.rotation = Quaternion.identity;
+        bullet.GetComponent<Bullet>().Init(damage, count, dir); // 1 is 1 Per.
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
+}
