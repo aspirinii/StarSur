@@ -15,7 +15,7 @@ MonoBehaviour:
   itemType: 1
   itemId: 1
   itemName: "\uC5FD\uCD1D"
-  itemDescription: 'Damage +{0}%
+  itemDescription: 'Damage +{0}
 
     Pierce +{1}'
   itemIcon: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}

@@ -39,9 +39,16 @@ public class GameManager : MonoBehaviour
     public void GameStart(int id)
     {
         playerId = id;
-        health = 60;
+        health = 70;
         player.gameObject.SetActive(true);
-        uiLevelUp.Select(playerId % 2); // 삽 총 선택  하여 시작ㅎ시점 부터 삽 총을 사용할 수 있게 한다.
+        if (playerId == 2)
+        {
+            uiLevelUp.Select(5); // 삽 총 선택  하여 시작ㅎ시점 부터 삽 총을 사용할 수 있  
+        }
+        else
+        {
+            uiLevelUp.Select(playerId % 2); // 삽 총 선택  하여 시작ㅎ시점 부터 삽 총을 사용할 수 있        }
+        }
         Resume();
 
         AudioManager.instance.PlayBgm(true);

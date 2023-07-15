@@ -10,23 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7a04be51e7f34a0f977c824063182bb, type: 3}
-  m_Name: Item 0
+  m_Name: Item 5
   m_EditorClassIdentifier: 
   itemType: 0
-  itemId: 0
-  itemName: "\uC0BD"
-  itemDescription: 'Damage +{0}
-
-    Bullet +{1}'
+  itemId: 5
+  itemName: Slash
+  itemDescription: Damage +{0}
   itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 10
   baseCount: 1
   damages:
-  - 1
   - 2
-  - 3
-  - 4
-  - 5
-  counts: 0100000002000000030000000400000005000000
-  projectile: {fileID: 4662850180942490390, guid: af9a9d3b37aef47e3b9693e37fe211fa, type: 3}
+  - 2
+  - 2
+  - 2
+  - 2
+  counts: 0100000002000000020000000200000002000000
+  projectile: {fileID: 4581816516377168535, guid: 34706201e6e6d4f16b121beffc1dd0b0, type: 3}
   handSprite: {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}

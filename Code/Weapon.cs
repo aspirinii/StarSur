@@ -9,8 +9,8 @@ public class Weapon : MonoBehaviour
     public int id;
     public int prefabId;
     public float damage;
-    public int count;
-    public float speed;
+    public int count; // bullet number , peierce 
+    public float speed; // attack speed , rotation speed , change it someday
     float timer; // weapon 1 fire timer 
     Player player;
 
@@ -35,6 +35,14 @@ public class Weapon : MonoBehaviour
                 if(timer > speed){
                     timer = 0;
                     Fire();
+                }
+                break;
+
+            case 5 :
+                timer += Time.deltaTime;
+                if(timer > speed){
+                    timer = 0;
+                    Slash();
                 }
                 break;
             default:
@@ -78,6 +86,7 @@ public class Weapon : MonoBehaviour
                 break;
             }
         }
+        // Attackspeed; make bullet
         switch (id) {
             case 0 :
                 speed = 150 * CharacterStatus.CircleSpeed;
@@ -86,14 +95,23 @@ public class Weapon : MonoBehaviour
             case 1 : 
                 speed = 1f * CharacterStatus.AttackSpeed;
                 break;
+            case 5 :
+                speed = 1f * CharacterStatus.AttackSpeed;
+                break; 
             default:
                 break;
         }
         //hand set 
-        Hand hand = player.hands[(int)data.itemType];
-        hand.spriteRenderer.sprite = data.handSprite;
-        hand.gameObject.SetActive(true);
-
+        switch (id) {
+            case 0 :
+            case 1 :
+                Hand hand = player.hands[(int)data.itemType];
+                hand.spriteRenderer.sprite = data.handSprite;
+                hand.gameObject.SetActive(true);
+                break;
+            default:
+                break;
+        }
         //Broadcast 나중에 뭔지 더 확인하기  
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver); // player에 있는 ApplyGear 함수를 호출
     }
@@ -135,6 +153,23 @@ public class Weapon : MonoBehaviour
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
         // bullet.rotation = Quaternion.identity;
         bullet.GetComponent<Bullet>().Init(damage, count, dir); // 1 is 1 Per.
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
+
+    void Slash() // 조금더 수정 필요 
+    {
+        if(!player.scanner.nearestTarget)
+            return;
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        // bullet.rotation = Quaternion.identity;
+        bullet.GetComponent<Bullet5Slash>().Init(damage, count, dir); // 1 is 1 Per.
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 }

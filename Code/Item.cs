@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
         switch (itemData.itemType){
             case ItemData.ItemType.Melee:
             case ItemData.ItemType.Range:
-                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel] * 100, itemData.counts[skillLevel]);
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel], itemData.counts[skillLevel]);
                 break;
             case ItemData.ItemType.Glove:
             case ItemData.ItemType.Shoe:
@@ -43,6 +43,9 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.Heal:
                 TextDescription.text = string.Format(itemData.itemDescription, itemData.baseDamage);
+                break;
+            case ItemData.ItemType.Slash:
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
                 break;
         }
             
@@ -59,7 +62,7 @@ public class Item : MonoBehaviour
                     weapon.Init(itemData);
                 }
                 else {
-                    float nextDamage = CharacterStatus.Damage;
+                    float nextDamage = CharacterStatus.Damage; //?
                     int nextCount = CharacterStatus.Count;
 
                     nextDamage += itemData.damages[skillLevel];
@@ -83,6 +86,21 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.Heal:
                 GameManager.instance.health += (int)Math.Round(itemData.baseDamage);
+                break;
+            case ItemData.ItemType.Slash:
+                if( skillLevel == 0){
+                    GameObject newWeapon = new GameObject();
+                    weapon = newWeapon.AddComponent<Weapon>();
+                    weapon.Init(itemData);
+                }
+                else{
+                    float nextDamage = CharacterStatus.Damage;
+                    int nextCount = CharacterStatus.Count; // 카운트는 의미 없지만 형태유지 
+                    nextDamage += itemData.damages[skillLevel];
+                    nextCount += itemData.counts[skillLevel];
+                    weapon.LevelUp(nextDamage, nextCount);
+                }
+                skillLevel++;
                 break;
         }
 

@@ -12,6 +12,7 @@ public class ItemData : ScriptableObject
         Glove,
         Shoe,
         Heal,
+        Slash,
     }
 
     [Header("# Main Information")]
