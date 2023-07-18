@@ -10,6 +10,10 @@ public class Bullet5Slash : Bullet
 
     Rigidbody2D rigid;
 
+    float timer; // weapon 1 fire timer 
+    float stay = 0.3f;
+
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -25,8 +29,21 @@ public class Bullet5Slash : Bullet
         this.per = per;
 
         if(per >= 0){
-            rigid.velocity = dir* 15f;
+            rigid.velocity = dir* 1f;
         }
+    }
+    private void FixedUpdate()
+    {
+        if(!isLive)
+            return;
+
+        timer += Time.deltaTime;
+        if(timer > stay){
+            timer = 0;
+            gameObject.SetActive(false);
+        }
+
+        
     }
 
 

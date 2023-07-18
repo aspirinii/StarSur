@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
     // bullet manager claas 
 
     public int id;
-    public int prefabId;
+    public int prefabPoolId;
     public float damage;
     public int count; // bullet number , peierce 
     public float speed; // attack speed , rotation speed , change it someday
@@ -82,7 +82,7 @@ public class Weapon : MonoBehaviour
         {
             if (data.projectile == GameManager.instance.pool.prefabs[index])
             {
-                prefabId = index;
+                prefabPoolId = index;
                 break;
             }
         }
@@ -125,7 +125,7 @@ public class Weapon : MonoBehaviour
                 bullet = transform.GetChild(index); // 자식에 돌고있는 위치(인덱스)를 가져옴
             }
             else{ // 불렛을 추가하는 코드
-                bullet = GameManager.instance.pool.Get(prefabId).transform;
+                bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
                 bullet.parent = transform;
             }
 
@@ -148,7 +148,7 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
         bullet.position = transform.position;
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
         // bullet.rotation = Quaternion.identity;
@@ -165,11 +165,17 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
-        bullet.position = transform.position;
-        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        bullet.position = transform.position + (dir*0.5f);
+        // bullet.rotation = Quaternion.FromToRotation(Vector3.zero, dir);
         // bullet.rotation = Quaternion.identity;
+        float tan = Mathf.Atan2(dir.y, dir.x);
+        float rotationOfZ = (tan * Mathf.Rad2Deg);
+        bullet.rotation = Quaternion.Euler(0,0,rotationOfZ);
+        
         bullet.GetComponent<Bullet5Slash>().Init(damage, count, dir); // 1 is 1 Per.
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
+
+
 }
