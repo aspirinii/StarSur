@@ -6,10 +6,10 @@ public class Bullet : MonoBehaviour
 {
 
     public float damage;
-    bool isLive;
     public int per;
 
-    Rigidbody2D rigid;
+    private bool isLive;
+    private Rigidbody2D rigid;
 
     private void Awake()
     {

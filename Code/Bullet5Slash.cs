@@ -5,9 +5,9 @@ using UnityEngine;
 public class Bullet5Slash : Bullet
 {
     // public new float damage;
-    bool isLive;
     // public new int per;
 
+    bool isLive;
     Rigidbody2D rigid;
 
     float timer; // weapon 1 fire timer 

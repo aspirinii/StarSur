@@ -142,6 +142,6 @@ public class GameManager : MonoBehaviour
         uiJoystick.localScale = Vector3.one;
 
     }
-
+        
     
 }
