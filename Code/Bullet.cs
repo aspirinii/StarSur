@@ -8,8 +8,8 @@ public class Bullet : MonoBehaviour
     public float damage;
     public int per;
 
-    private bool isLive;
-    private Rigidbody2D rigid;
+    protected bool isLive;
+    protected Rigidbody2D rigid;
 
     private void Awake()
     {

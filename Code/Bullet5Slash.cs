@@ -7,8 +7,8 @@ public class Bullet5Slash : Bullet
     // public new float damage;
     // public new int per;
 
-    bool isLive;
-    Rigidbody2D rigid;
+    // private new bool isLive;
+    // private new Rigidbody2D rigid; //상속받는걸로 처리 , 아님 그냥 주석 풀어줘도 됨 new 로 여기 변수로 작용 
 
     float timer; // weapon 1 fire timer 
     float stay = 0.3f;

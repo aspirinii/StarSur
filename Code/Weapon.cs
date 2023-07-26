@@ -126,7 +126,7 @@ public class Weapon : MonoBehaviour
             }
             else{ // 불렛을 추가하는 코드
                 bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
-                bullet.parent = transform;
+                bullet.parent = transform; // 불렛의 부모를 웨폰 자기자신으로 설정
             }
 
             bullet.parent = transform;
@@ -165,7 +165,7 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform; // 만들고 계속 쓰는것, 만들고 풀로 돌려보내는것 다시 쓰는것 은 다름 
         bullet.position = transform.position + (dir*0.5f);
         // bullet.rotation = Quaternion.FromToRotation(Vector3.zero, dir);
         // bullet.rotation = Quaternion.identity;
