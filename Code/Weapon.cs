@@ -165,10 +165,12 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform; // 만들고 계속 쓰는것, 만들고 풀로 돌려보내는것 다시 쓰는것 은 다름 
-        bullet.position = transform.position + (dir*0.5f);
-        // bullet.rotation = Quaternion.FromToRotation(Vector3.zero, dir);
-        // bullet.rotation = Quaternion.identity;
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        bullet.position = player.transform.position;
+
+        bullet.SetParent(transform);
+        // bullet.localPosition = dir*0.5f;
+     
         float tan = Mathf.Atan2(dir.y, dir.x);
         float rotationOfZ = (tan * Mathf.Rad2Deg);
         bullet.rotation = Quaternion.Euler(0,0,rotationOfZ);
