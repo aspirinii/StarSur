@@ -45,6 +45,15 @@ public class Weapon : MonoBehaviour
                     Slash();
                 }
                 break;
+            
+            case 6 :
+                timer += Time.deltaTime;
+                if(timer > speed){
+                    timer = 0;
+                    Scarab();
+                }
+                break;
+
             default:
                 break;
         }
@@ -97,7 +106,10 @@ public class Weapon : MonoBehaviour
                 break;
             case 5 :
                 speed = 1f * CharacterStatus.AttackSpeed;
-                break; 
+                break;
+            case 6 :
+                speed = 1f * CharacterStatus.AttackSpeed;
+                break;
             default:
                 break;
         }
@@ -179,5 +191,20 @@ public class Weapon : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 
+    void Scarab()
+    {
+        if(!player.scanner.nearestTarget)
+            return;
 
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        // bullet.rotation = Quaternion.identity;
+        bullet.GetComponent<Bullet6Scarab>().Init(damage, count, dir); // 1 is 1 Per.
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
 }

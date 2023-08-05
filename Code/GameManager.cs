@@ -43,11 +43,15 @@ public class GameManager : MonoBehaviour
         player.gameObject.SetActive(true);
         if (playerId == 2)
         {
-            uiLevelUp.Select(5); // 삽 총 선택  하여 시작ㅎ시점 부터 삽 총을 사용할 수 있  
+            uiLevelUp.Select(5); // 삽 총 선택  하여 시작시점 부터 삽 총을 사용할 수 있음
+        }
+        else if(playerId == 3){
+            uiLevelUp.Select(6);  
+
         }
         else
         {
-            uiLevelUp.Select(playerId % 2); // 삽 총 선택  하여 시작ㅎ시점 부터 삽 총을 사용할 수 있        }
+            uiLevelUp.Select(playerId % 2); 
         }
         Resume();
 

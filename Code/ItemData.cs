@@ -13,6 +13,7 @@ public class ItemData : ScriptableObject
         Shoe,
         Heal,
         Slash,
+        Scarab,
     }
 
     [Header("# Main Information")]

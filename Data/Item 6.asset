@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7a04be51e7f34a0f977c824063182bb, type: 3}
-  m_Name: Item 5
+  m_Name: Item 6
   m_EditorClassIdentifier: 
-  itemType: 0
-  itemId: 5
-  itemName: Slash
+  itemType: 6
+  itemId: 6
+  itemName: Scarab
   itemDescription: Damage +{0}
-  itemIcon: {fileID: -344242777, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  itemIcon: {fileID: -1002307068, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 10
   baseCount: 1
   damages:
@@ -26,5 +26,5 @@ MonoBehaviour:
   - 2
   - 2
   counts: 0100000002000000020000000200000002000000
-  projectile: {fileID: 4581816516377168535, guid: 34706201e6e6d4f16b121beffc1dd0b0, type: 3}
+  projectile: {fileID: 5918004426244379972, guid: 66bafcb29ba4e4cfe8b735e67499d32b, type: 3}
   handSprite: {fileID: 0}

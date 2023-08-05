@@ -102,6 +102,23 @@ public class Item : MonoBehaviour
                 }
                 skillLevel++;
                 break;
+            case ItemData.ItemType.Scarab:
+                if( skillLevel == 0){
+                    GameObject newWeapon = new GameObject();
+                    weapon = newWeapon.AddComponent<Weapon>();
+                    weapon.Init(itemData);
+                }
+                else {
+                    float nextDamage = CharacterStatus.Damage; //?
+                    int nextCount = CharacterStatus.Count;
+                    // 사실상 필요없는 할당 Null 대비?!
+
+                    nextDamage += itemData.damages[skillLevel];
+                    nextCount += itemData.counts[skillLevel];
+                    weapon.LevelUp(nextDamage, nextCount);
+                }
+                skillLevel++;
+                break;
         }
 
 
