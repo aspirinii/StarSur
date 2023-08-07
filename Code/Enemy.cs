@@ -76,6 +76,9 @@ public class Enemy : MonoBehaviour
         health -= collision.GetComponent<Bullet>().damage;
         StartCoroutine(KnockBack());
 
+        // health -= collision.GetComponent<Bullet6Explosion>().damage;
+ 
+
         if(health <= 0){
             Dead();
         }else{
@@ -90,7 +93,6 @@ public class Enemy : MonoBehaviour
         Vector3 playerPos = GameManager.instance.player.transform.position;
         Vector3 dirVector = transform.position - playerPos;
         rigidBody.AddForce(dirVector.normalized * 3f, ForceMode2D.Impulse);
-
 
         // yield return new WaitForSeconds(0.1f); // 0.1초 쉬기
         // yield return null; // 하나의 프레임 쉬기 

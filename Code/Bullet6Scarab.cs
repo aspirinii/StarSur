@@ -7,10 +7,13 @@ public class Bullet6Scarab : Bullet
 
     // public float damage;
     // public int per;
-
     // protected bool isLive;
     // protected Rigidbody2D rigid;
-    private int prefabPoolId;
+    public GameObject explosionObject; 
+    public int prefabPoolexplosionId;
+    // call explosion object from pool manager
+    // call explosion object from pool manager
+    int explosionDamage =100;
 
     private void Awake()
     {
@@ -24,12 +27,14 @@ public class Bullet6Scarab : Bullet
     public new void Init(float damage, int per, Vector3 dir)
     {
         this.damage = damage;
-        this.per = per;
 
-        if(per >= 0){
-            rigid.velocity = dir* 15f;
-        }
+        rigid.velocity = dir* 15f;
+
     }
+    public void SetExplosionPrefabPoolId(int id){
+        prefabPoolexplosionId = id;
+    }
+
 
 
     private void OnTriggerEnter2D(Collider2D other)//it is not work
@@ -37,23 +42,25 @@ public class Bullet6Scarab : Bullet
         if(!isLive)
             return;
 
-
         if(!other.CompareTag("Enemy") || per == -100){
-
             return;
         }
 
         isLive = false;
+        // make explosion object from pool manager
+        // 1. get explosion object from pool manager
+        // 2. set position and rotation
+        // 3. set damage
+        // 4. play sound
+        // 5. set active false
+        Transform explosion = GameManager.instance.pool.Get(prefabPoolexplosionId).transform;
+        explosion.position = transform.position;
+        explosion.rotation = Quaternion.identity;
+        // GameObject explosion = Instantiate(explosionObject, transform.position, Quaternion.identity);
 
-
-        // Instantiate second explosion object at the current transform position from pool manager
-        Transform explosion = GameManager.instance.pool.Get(prefabPoolId).transform;
-
-
+        explosion.GetComponent<Bullet6Explosion>().Init(explosionDamage); 
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
         gameObject.SetActive(false);
-        
-
-
     }
 
 

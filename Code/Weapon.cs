@@ -17,6 +17,7 @@ public class Weapon : MonoBehaviour
     private void Awake()
     {
         player = GameManager.instance.player;
+
     }
 
 
@@ -124,6 +125,7 @@ public class Weapon : MonoBehaviour
             default:
                 break;
         }
+    
         //Broadcast 나중에 뭔지 더 확인하기  
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver); // player에 있는 ApplyGear 함수를 호출
     }
@@ -200,11 +202,29 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
+
+
+
         Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
         bullet.position = transform.position;
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
         // bullet.rotation = Quaternion.identity;
-        bullet.GetComponent<Bullet6Scarab>().Init(damage, count, dir); // 1 is 1 Per.
+        bullet.GetComponent<Bullet6Scarab>().Init(damage, 1, dir);
+        bullet.GetComponent<Bullet6Scarab>().SetExplosionPrefabPoolId(PrefabPoolExplosionIdReturn());
+
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
+
+    int PrefabPoolExplosionIdReturn(){
+        int prefabPoolexplosionId= -1;
+        for (int index = 0; index < GameManager.instance.pool.prefabs.Length; index++) // 생성
+        {
+            if (GameManager.instance.pool.prefabs[index].name == "Bullet 6 Explosion")
+            {
+                prefabPoolexplosionId = index;
+                break;
+            }
+        }
+        return prefabPoolexplosionId;
     }
 }
