@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Result uiResult;
     public Transform uiJoystick;
     public GameObject enemyCleaner;
+    public GameObject inputDirectionArrow;
 
     void Awake()
     {
@@ -49,6 +50,12 @@ public class GameManager : MonoBehaviour
             uiLevelUp.Select(6);  
 
         }
+        else if(playerId == 0){
+            uiLevelUp.Select(5);  
+            // check itemData Class 
+            //index 5 is 5th item in itemData, 
+
+        }
         else
         {
             uiLevelUp.Select(playerId % 2); 
@@ -57,8 +64,19 @@ public class GameManager : MonoBehaviour
 
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+
+        GameObject InputDirectionArrow = GameObject.Instantiate(inputDirectionArrow, player.transform);
+        
     }
 
+    void FixedUpdate()
+    {
+        //if ketboard input q, upgrade weapon
+        if(Input.GetKeyDown(KeyCode.Q)){
+            uiLevelUp.Select(5);  
+        }
+
+    }
     public void GameOver()
     {
 

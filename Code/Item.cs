@@ -47,6 +47,18 @@ public class Item : MonoBehaviour
             case ItemData.ItemType.Slash:
                 TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
                 break;
+            case ItemData.ItemType.Scarab:
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
+                break;
+            case ItemData.ItemType.Stab:
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
+                break;
+            case ItemData.ItemType.CircleSlash:
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
+                break;
+            default: /// 오히려 에러의 위험?! 흠 
+                TextDescription.text = string.Format(itemData.itemDescription, itemData.damages[skillLevel]);
+                break;
         }
             
     }
@@ -57,7 +69,7 @@ public class Item : MonoBehaviour
             case ItemData.ItemType.Melee:
             case ItemData.ItemType.Range:
                 if( skillLevel == 0){
-                    GameObject newWeapon = new GameObject();
+                    GameObject newWeapon = new();
                     weapon = newWeapon.AddComponent<Weapon>();
                     weapon.Init(itemData);
                 }
@@ -74,7 +86,7 @@ public class Item : MonoBehaviour
             case ItemData.ItemType.Glove:
             case ItemData.ItemType.Shoe:
                 if (skillLevel == 0){
-                    GameObject newGear = new GameObject();
+                    GameObject newGear = new();
                     gear = newGear.AddComponent<Gear>();
                     gear.Init(itemData);
                 }
@@ -89,7 +101,7 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.Slash:
                 if( skillLevel == 0){
-                    GameObject newWeapon = new GameObject();
+                    GameObject newWeapon = new();
                     weapon = newWeapon.AddComponent<Weapon>();
                     weapon.Init(itemData);
                 }
@@ -104,7 +116,41 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.Scarab:
                 if( skillLevel == 0){
-                    GameObject newWeapon = new GameObject();
+                    GameObject newWeapon = new();
+                    weapon = newWeapon.AddComponent<Weapon>();
+                    weapon.Init(itemData);
+                }
+                else {
+                    float nextDamage = CharacterStatus.Damage; //?
+                    int nextCount = CharacterStatus.Count;
+                    // 사실상 필요없는 할당 Null 대비?!
+
+                    nextDamage += itemData.damages[skillLevel];
+                    nextCount += itemData.counts[skillLevel];
+                    weapon.LevelUp(nextDamage, nextCount);
+                }
+                skillLevel++;
+                break;
+            case ItemData.ItemType.Stab:
+                if( skillLevel == 0){
+                    GameObject newWeapon = new();
+                    weapon = newWeapon.AddComponent<Weapon>();
+                    weapon.Init(itemData);
+                }
+                else {
+                    float nextDamage = CharacterStatus.Damage; //?
+                    int nextCount = CharacterStatus.Count;
+                    // 사실상 필요없는 할당 Null 대비?!
+
+                    nextDamage += itemData.damages[skillLevel];
+                    nextCount += itemData.counts[skillLevel];
+                    weapon.LevelUp(nextDamage, nextCount);
+                }
+                skillLevel++;
+                break;
+            case ItemData.ItemType.CircleSlash:
+                if( skillLevel == 0){
+                    GameObject newWeapon = new();
                     weapon = newWeapon.AddComponent<Weapon>();
                     weapon.Init(itemData);
                 }

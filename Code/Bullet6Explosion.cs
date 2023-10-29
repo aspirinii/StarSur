@@ -5,13 +5,13 @@ using UnityEngine;
 public class Bullet6Explosion : Bullet
 {
     // public float damage;
-    // public int per;
+    // float per = 100;
 
     // protected bool isLive;
     // protected Rigidbody2D rigid;
 
     float timer = 0; // weapon 1 fire timer 
-    float stay = 1f;
+    readonly float stay = 1f;
 
 
     private void Awake()
@@ -23,9 +23,10 @@ public class Bullet6Explosion : Bullet
     {
         isLive = true;
     }
-    public new void Init(float damage)
+    public void Init(float damage)
     {
         this.damage = damage;
+        this.per = 100;
     }
     private void FixedUpdate()
     {
@@ -42,11 +43,6 @@ public class Bullet6Explosion : Bullet
         }
 
         
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-
     }
 
 

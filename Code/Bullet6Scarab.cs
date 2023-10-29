@@ -13,7 +13,7 @@ public class Bullet6Scarab : Bullet
     public int prefabPoolexplosionId;
     // call explosion object from pool manager
     // call explosion object from pool manager
-    int explosionDamage =100;
+    readonly int explosionDamage =100;
 
     private void Awake()
     {
@@ -24,7 +24,8 @@ public class Bullet6Scarab : Bullet
     {
         isLive = true;
     }
-    public new void Init(float damage, int per, Vector3 dir)
+    public void Init(float damage, Vector3 dir) 
+    // per is not use so it is not need to override Init
     {
         this.damage = damage;
 
@@ -54,8 +55,7 @@ public class Bullet6Scarab : Bullet
         // 4. play sound
         // 5. set active false
         Transform explosion = GameManager.instance.pool.Get(prefabPoolexplosionId).transform;
-        explosion.position = transform.position;
-        explosion.rotation = Quaternion.identity;
+        explosion.SetPositionAndRotation(transform.position, Quaternion.identity);
         // GameObject explosion = Instantiate(explosionObject, transform.position, Quaternion.identity);
 
         explosion.GetComponent<Bullet6Explosion>().Init(explosionDamage); 

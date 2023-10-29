@@ -24,13 +24,11 @@ public class CharacterStatus : MonoBehaviour
     public static float AttackSpeed
     {
         get{
-            switch (GameManager.instance.playerId)
+            return GameManager.instance.playerId switch
             {
-                case 1:
-                    return 1f;
-                default:
-                    return 1f;
-            }
+                1 => 1f,
+                _ => 1f,
+            };
         }
     }
 
@@ -42,15 +40,12 @@ public class CharacterStatus : MonoBehaviour
     public static float Damage
     {
         get{
-            switch (GameManager.instance.playerId)
+            return GameManager.instance.playerId switch
             {
-                case 0:
-                    return 10f;
-                case 3:
-                    return 20f;
-                default:
-                    return 5f;
-            }
+                0 => 10f,
+                3 => 20f,
+                _ => 5f,
+            };
         }
     }
 

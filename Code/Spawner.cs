@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
     void Spawn()
     {
         int randomPointIndex = Random.Range(1, spawnPoints.Length); // 부모(Spawner)가 index가 0 이므로 빼줌 
-        int randomMonsterIndex = Random.Range(0, 2); 
+        // int randomMonsterIndex = Random.Range(0, 2); 
         // Max!Ex!clusive 확인 .. 0,1,2 중에 2는 제외됨 
         // 0,1,2 중에 0,1만 나옴
 

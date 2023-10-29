@@ -7,13 +7,15 @@ public class ItemData : ScriptableObject
 {
     public enum ItemType
     {
-        Melee,
-        Range,
-        Glove,
-        Shoe,
-        Heal,
-        Slash,
-        Scarab,
+        Melee, //0
+        Range, //1
+        Glove, //2
+        Shoe, //3
+        Heal,   //4
+        Slash, //5
+        Scarab, //6
+        Stab, //7
+        CircleSlash //8
     }
 
     [Header("# Main Information")]

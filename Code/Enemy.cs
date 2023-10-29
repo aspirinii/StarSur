@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject FloatingTextPrefab;
     public float speed;
     public float health;
     public float maxHealth;
@@ -73,11 +75,16 @@ public class Enemy : MonoBehaviour
         if(!collision.CompareTag("Bullet"))
             return;
         
-        health -= collision.GetComponent<Bullet>().damage;
+        
+        float receiveDamage= collision.GetComponent<Bullet>().damage;
+        health -= receiveDamage;
         StartCoroutine(KnockBack());
 
         // health -= collision.GetComponent<Bullet6Explosion>().damage;
- 
+
+        if(FloatingTextPrefab){
+            ShowFloatingText(receiveDamage);
+        } 
 
         if(health <= 0){
             Dead();
@@ -85,6 +92,18 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger("Hit");
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
+    }
+    protected void ShowFloatingText(float damage){
+
+        Vector3 textPosition = new Vector3(UnityEngine.Random.Range(-0.2f, 0.2f),UnityEngine.Random.Range(-0.2f, 0.2f),0 );
+        GameObject floatingText = Instantiate(FloatingTextPrefab, transform.position + textPosition, Quaternion.identity, transform);
+
+        // Rect Transform 때문에 변경 안되는 듯 ... 
+        // TextPMeshPro가 일반 transform 에 잘동작하는지
+        // 애니메이션 새로 만들어야 하는지;
+
+        floatingText.GetComponent<TextMeshPro>().text = damage.ToString();
+        Destroy(floatingText, 1);
     }
 
     IEnumerator KnockBack()

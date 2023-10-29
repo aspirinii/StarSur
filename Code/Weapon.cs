@@ -28,7 +28,7 @@ public class Weapon : MonoBehaviour
         switch (id) {
             case 0 :
                 // transform.Rotate(0,0,speed * Time.deltaTime);
-                transform.Rotate(Vector3.back * speed * Time.deltaTime); // 한프레임이 소비하는시간 DeltaTime
+                transform.Rotate(speed * Time.deltaTime * Vector3.back); // 한프레임이 소비하는시간 DeltaTime
                 break;
 
             case 1 :
@@ -52,6 +52,20 @@ public class Weapon : MonoBehaviour
                 if(timer > speed){
                     timer = 0;
                     Scarab();
+                }
+                break;
+            case 7 :
+                timer += Time.deltaTime;
+                if(timer > speed){
+                    timer = 0;
+                    Stab();
+                }
+                break;
+            case 8 :
+                timer += Time.deltaTime;
+                if(timer > speed){
+                    timer = 0;
+                    CircleSlash();
                 }
                 break;
 
@@ -111,7 +125,11 @@ public class Weapon : MonoBehaviour
             case 6 :
                 speed = 1f * CharacterStatus.AttackSpeed;
                 break;
+            case 8 :
+                speed = 3f * CharacterStatus.AttackSpeed; // speed 라기보단 공격 딜레이 속도
+                break;
             default:
+                speed = 1f * CharacterStatus.AttackSpeed;
                 break;
         }
         //hand set 
@@ -144,9 +162,8 @@ public class Weapon : MonoBehaviour
             }
 
             bullet.parent = transform;
-            bullet.localPosition = new Vector3(0,0,0);
-            bullet.localRotation = Quaternion.identity;
-            Vector3 rotVec = Vector3.forward * (360f / count) * index;
+            bullet.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
+            Vector3 rotVec = (360f / count) * index * Vector3.forward;
             bullet.Rotate(rotVec);
             bullet.Translate(bullet.up * 1.5f, Space.World);
             bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero); // -100 is Infinity Per.(관통)
@@ -163,8 +180,7 @@ public class Weapon : MonoBehaviour
         dir = dir.normalized;
 
         Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
-        bullet.position = transform.position;
-        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.SetPositionAndRotation(transform.position, Quaternion.FromToRotation(Vector3.up, dir));
         // bullet.rotation = Quaternion.identity;
         bullet.GetComponent<Bullet>().Init(damage, count, dir); // 1 is 1 Per.
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
@@ -193,6 +209,46 @@ public class Weapon : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 
+    void Stab() // 조금더 수정 필요 
+    {
+        if(!player.scanner.nearestTarget)
+            return;
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        bullet.position = player.transform.position;
+
+        bullet.SetParent(transform);
+        // bullet.localPosition = dir*0.5f;
+     
+        float tan = Mathf.Atan2(dir.y, dir.x);
+        float rotationOfZ = (tan * Mathf.Rad2Deg);
+        bullet.rotation = Quaternion.Euler(0,0,rotationOfZ - 90);
+        
+        bullet.GetComponent<ArmsStab>().Init(damage, count, dir); // 1 is 1 Per.
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
+
+    void CircleSlash()
+    {
+        if(!player.scanner.nearestTarget)
+            return;
+
+
+        Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
+        bullet.position = player.transform.position;
+
+        bullet.SetParent(transform);
+        // bullet.localPosition = dir*0.5f;
+        
+        bullet.GetComponent<ArmCircleSlash>().Init(damage); // 1 is 1 Per.
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
+    }
+
+
     void Scarab()
     {
         if(!player.scanner.nearestTarget)
@@ -206,10 +262,9 @@ public class Weapon : MonoBehaviour
 
 
         Transform bullet = GameManager.instance.pool.Get(prefabPoolId).transform;
-        bullet.position = transform.position;
-        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.SetPositionAndRotation(transform.position, Quaternion.FromToRotation(Vector3.up, dir));
         // bullet.rotation = Quaternion.identity;
-        bullet.GetComponent<Bullet6Scarab>().Init(damage, 1, dir);
+        bullet.GetComponent<Bullet6Scarab>().Init(damage, dir);
         bullet.GetComponent<Bullet6Scarab>().SetExplosionPrefabPoolId(PrefabPoolExplosionIdReturn());
 
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);

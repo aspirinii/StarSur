@@ -10,8 +10,8 @@ public class Bullet5Slash : Bullet
     // private new bool isLive;
     // private new Rigidbody2D rigid; //상속받는걸로 처리 , 아님 그냥 주석 풀어줘도 됨 new 로 여기 변수로 작용 
 
-    float timer; // weapon 1 fire timer 
-    float stay = 0.2f;
+    private float timer; // weapon 1 fire timer 
+    private readonly float stay = 0.8f;
 
     // Player player;
     // Vector3 offsetFromPlayer; 
@@ -38,10 +38,10 @@ public class Bullet5Slash : Bullet
         this.per = per;
 
         transform.localPosition = dir * 0.8f;
-        // if(per >= 0){
-
-        StartCoroutine(MoveBulletCoroutine(dir));
-        // }
+        
+        //moving bullet 
+        // StartCoroutine(MoveBulletCoroutine(dir));
+        
 
     }
 
@@ -49,7 +49,7 @@ public class Bullet5Slash : Bullet
     {
         while (isLive)
         {
-            transform.Translate(dir * 1f * Time.deltaTime);
+            transform.Translate(1f * Time.deltaTime * dir);
             yield return null;  // Wait for the next frame
         }
     }
