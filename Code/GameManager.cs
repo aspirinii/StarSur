@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
     }
+    
 
     public void GameStart(int id)
     {
@@ -75,8 +76,10 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Q)){
             uiLevelUp.Select(5);  
         }
+        //test code 
 
     }
+
     public void GameOver()
     {
 
@@ -118,7 +121,8 @@ public class GameManager : MonoBehaviour
 
     public void GameRetry()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1); 
+
     }
     public void GameQuit()
     {
@@ -146,7 +150,8 @@ public class GameManager : MonoBehaviour
         if(exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]){
             level++;
             exp = 0;
-            uiLevelUp.Show();
+            // uiLevelUp.Show();
+            // 테스트를 위해 블록처리 
         }
     }
 

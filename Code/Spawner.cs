@@ -5,49 +5,94 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Transform[] spawnPoints;
-    public SpawnData[] spawnData;
+    public MonsterData[] monsterData;
     public float levelTime; 
     float spawnTimer;
-    int monterLevel;
+    float frequencyOfSpawn = 0.3f;
 
+
+    private SpawnerMonsterData[] spawnerMonsterArray;
+
+    struct SpawnerMonsterData
+    {
+        public int wavePhase;
+        public int monsterLevel;
+        public float startingTime;
+        public bool spawnerStarted;
+
+        public SpawnerMonsterData(int wavePhase, int monsterLevel, float startingTime)
+        {
+            this.wavePhase = wavePhase;
+            this.monsterLevel = monsterLevel;
+            this.startingTime = startingTime;
+            this.spawnerStarted = false;
+        }
+    }
+    
     private void Awake()
     {
         spawnPoints = GetComponentsInChildren<Transform>();
-        levelTime = GameManager.instance.maxGameTime / spawnData.Length;
     }
+
+    private void Start()
+    {
+        spawnerMonsterArray = new SpawnerMonsterData[]
+        {
+            new SpawnerMonsterData(1, 0, 0.0f),
+            new SpawnerMonsterData(2, 1, 10.0f),
+            new SpawnerMonsterData(3, 2, 20.0f),
+            new SpawnerMonsterData(4, 3, 30.0f),
+            new SpawnerMonsterData(5, 4, 40.0f)
+        };
+
+        // Use the array as needed
+        foreach (var monsterData in spawnerMonsterArray)
+        {
+            Debug.Log($" ### Check Wave ### Wave: {monsterData.wavePhase}, Level: {monsterData.monsterLevel}, Time: {monsterData.startingTime}, spawnerStarted: {monsterData.spawnerStarted}" );
+        }
+    }
+
+
     void Update()
     {
-        if(!GameManager.instance.isLive)
+        if(!GameManager.instance.isLive){
             return;
-        spawnTimer += Time.deltaTime;
-        monterLevel = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTimer / levelTime), spawnData.Length - 1);
+        }
 
-        if(spawnTimer > spawnData[monterLevel].spawnTime){
-            Spawn();
-            spawnTimer = 0;
+        for (int i = 0; i < spawnerMonsterArray.Length; i++)
+        {
+                if (!spawnerMonsterArray[i].spawnerStarted && GameManager.instance.gameTimer >= spawnerMonsterArray[i].startingTime){
+                StartCoroutine(SpawnMonster(spawnerMonsterArray[i].monsterLevel));
+                spawnerMonsterArray[i].spawnerStarted = true;
+                
+                Debug.Log($" ### Start Wave ### Wave: {spawnerMonsterArray[i].wavePhase}, Level: {spawnerMonsterArray[i].monsterLevel}, Time: {spawnerMonsterArray[i].startingTime}, spawnerStarted: {spawnerMonsterArray[i].spawnerStarted}, GameManager.instance.time: {GameManager.instance.gameTimer}" );
+                
+            }
         }
 
     }
-    void Spawn()
+    void Spawn(int monsterLevel)
     {
         int randomPointIndex = Random.Range(1, spawnPoints.Length); // 부모(Spawner)가 index가 0 이므로 빼줌 
-        // int randomMonsterIndex = Random.Range(0, 2); 
-        // Max!Ex!clusive 확인 .. 0,1,2 중에 2는 제외됨 
-        // 0,1,2 중에 0,1만 나옴
 
         Transform spawnPoint = spawnPoints[randomPointIndex];
-        GameObject monster = GameManager.instance.pool.Get(0); // prefab 을 하나만 만들고 애니메이터만 바꿔줌
+        GameObject monster = GameManager.instance.pool.Get(0);
+        //Get(0) : Enemy Prefab, Get(1) : Bullet Prefab
+         // prefab 을 하나만 만들고 애니메이터만 바꿔줌
         monster.transform.position = spawnPoint.position;
-        monster.GetComponent<Enemy>().Init(spawnData[monterLevel]);
+        monster.GetComponent<Enemy>().Init(monsterData[monsterLevel]);
     }
+
+
+    // Coroutine to start spawning of moster
+    IEnumerator SpawnMonster(int monsterLevel)
+    {
+        while(GameManager.instance.isLive){
+            yield return new WaitForSeconds(frequencyOfSpawn);
+            Spawn(monsterLevel);
+        }
+
+    }
+
 }
 
-[System.Serializable]
-public class SpawnData
-{
-    public float spawnTime;
-    public int spriteType;
-    public int health;
-    public float speed;
-
-}

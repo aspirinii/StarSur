@@ -6,12 +6,14 @@ using TMPro;
 public class Enemy : MonoBehaviour
 {
     public GameObject FloatingTextPrefab;
-    public float speed;
-    public float health;
-    public float maxHealth;
     public RuntimeAnimatorController[] animatorControllers;
+    [HideInInspector]
+    public float speed;
+    public int health;
+    public int maxHealth;
+    public int damage;
     public Rigidbody2D target;
-    
+    //when enemy enable, target will set player
     bool isLive;
 
     Animator animator;
@@ -34,6 +36,7 @@ public class Enemy : MonoBehaviour
             return;
         if(!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             return;
+        //이동함수 기능 수행 
         Vector2 dirVector = target.position - rigidBody.position;
         Vector2 moveVector = dirVector.normalized * speed * Time.fixedDeltaTime;
         rigidBody.MovePosition(rigidBody.position + moveVector);
@@ -45,26 +48,30 @@ public class Enemy : MonoBehaviour
             return;
         if(!isLive)
             return;
+        //스프라이트 방향전환
         Vector2 dirVector = target.position - rigidBody.position;
         spriteRenderer.flipX = dirVector.x < 0;
     }
 
+    public void Init(MonsterData monsterData)
+    {
+        // 스폰데이터 초기화 
+        animator.runtimeAnimatorController = animatorControllers[monsterData.spriteType];
+        speed = monsterData.speed;
+        maxHealth = monsterData.health;
+        health = maxHealth;
+        damage = monsterData.damage;
+        
+    }
     private void OnEnable()
     {
+        //각종 초기화 수행 
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;
         collid.enabled = true;
         rigidBody.simulated = true;
         spriteRenderer.sortingOrder = 2;
         animator.SetBool("Dead", false);
-        health = maxHealth;
-    }
-
-    public void Init(SpawnData spawnData)
-    {
-        animator.runtimeAnimatorController = animatorControllers[spawnData.spriteType];
-        speed = spawnData.speed;
-        maxHealth = spawnData.health;
         health = maxHealth;
     }
 
@@ -75,22 +82,25 @@ public class Enemy : MonoBehaviour
         if(!collision.CompareTag("Bullet"))
             return;
         
-        
-        float receiveDamage= collision.GetComponent<Bullet>().damage;
+        // Bullet damage 받기
+        int receiveDamage = (int)collision.GetComponent<Bullet>().damage;
         health -= receiveDamage;
         StartCoroutine(KnockBack());
 
-        // health -= collision.GetComponent<Bullet6Explosion>().damage;
 
+        // FloatingText 생성
         if(FloatingTextPrefab){
             ShowFloatingText(receiveDamage);
         } 
 
+        // sfx 재생
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
+
+        // 죽음 판정
         if(health <= 0){
             Dead();
         }else{
             animator.SetTrigger("Hit");
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
     }
     protected void ShowFloatingText(float damage){

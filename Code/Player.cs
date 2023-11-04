@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+
 
 public class Player : MonoBehaviour
 {
@@ -16,7 +18,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rigidBody;
     SpriteRenderer spriteRenderer;
     Animator animator;
-
+    public GameObject FloatingTextPrefab;
 
 
     void Awake()
@@ -73,8 +75,16 @@ public class Player : MonoBehaviour
     {
         if(!GameManager.instance.isLive)
             return;
-
-        GameManager.instance.health -= Time.deltaTime * 10; 
+        // check other is enemy 
+        if(other == null || other.transform.tag != "Enemy")
+            return;
+        int receiveDamage = other.gameObject.GetComponent<Enemy>().damage;
+        GameManager.instance.health -= Time.deltaTime * receiveDamage; // 프레임당 데미지 들어감.. 초당 ReceiveDamage 들어감
+        
+        // FloatingText 생성
+        if(FloatingTextPrefab){
+            ShowFloatingText( Time.deltaTime * receiveDamage);
+        }  
         
         if(GameManager.instance.health <= 0){
             for(int index=2; index<transform.childCount; index++){
@@ -84,6 +94,17 @@ public class Player : MonoBehaviour
             // GameManager.instance.isLive = false;
             GameManager.instance.GameOver();
         }
+    }
+
+    protected void ShowFloatingText(float damage){
+        Vector3 textPosition = new Vector3(UnityEngine.Random.Range(-0.2f, 0.2f),UnityEngine.Random.Range(-0.2f, 0.2f),0 );
+        GameObject floatingText = Instantiate(FloatingTextPrefab, transform.position + textPosition, Quaternion.identity, transform);
+
+        TextMeshPro textMeshPro = floatingText.GetComponent<TextMeshPro>();
+        textMeshPro.text = damage.ToString();
+        textMeshPro.color = Color.red;  // Set the color to red
+
+        Destroy(floatingText, 1);
     }
 
 

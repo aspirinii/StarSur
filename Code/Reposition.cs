@@ -17,6 +17,7 @@ public class Reposition : MonoBehaviour
         Vector3 playerPos = GameManager.instance.player.transform.position;
         Vector3 myPos = transform.position;
 
+
         switch (transform.tag) {
             case "Ground":
                 float diffX = playerPos.x - myPos.x;
@@ -25,6 +26,8 @@ public class Reposition : MonoBehaviour
                 float dirY = diffY < 0 ?  -1 : 1; 
                 diffX = Mathf.Abs(diffX);
                 diffY = Mathf.Abs(diffY);
+                // Debug.Log("PlayerPos : " + playerPos);
+                // Debug.Log("MyPos : " + myPos);
 
                 if(diffX > diffY){
                     transform.position = new Vector3(myPos.x + dirX * 40, myPos.y, myPos.z);
